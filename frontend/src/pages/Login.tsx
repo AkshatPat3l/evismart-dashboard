@@ -112,7 +112,7 @@ export const Login: React.FC = () => {
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[800px] h-[800px] opacity-80">
-            <PulsingSignature color="#3b82f6" speed={1.2} distort={0.1} scale={0.8} />
+            <PulsingSignature color="#3b82f6" speed={1.2} scale={0.8} />
           </div>
         </div>
         <div className="absolute bottom-12 left-12 right-12 text-center pointer-events-none text-white/40 font-medium tracking-widest text-sm uppercase">

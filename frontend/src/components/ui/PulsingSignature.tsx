@@ -1,19 +1,17 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, MeshTransmissionMaterial, Environment, Center } from '@react-three/drei';
+import { Float, Environment, Center } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface PulsingSignatureProps {
   color?: string;
   speed?: number;
-  distort?: number;
   scale?: number;
 }
 
 const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({ 
   color = '#2563eb', // Default evismart-blue
   speed = 1.0,
-  distort = 0.1,
   scale = 1
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -69,20 +67,18 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
       <Center>
         <mesh ref={meshRef}>
           <extrudeGeometry args={[toothShape, extrudeSettings]} />
-          <MeshTransmissionMaterial
-            backside
-            samples={32} // Increased for premium quality
-            thickness={2 + distort * 5}
-            roughness={0} // Maximum gloss
-            clearcoat={1}
-            clearcoatRoughness={0} // Flawless surface
-            transmission={1}
-            ior={1.6}
-            chromaticAberration={0.03 + distort * 0.1}
-            anisotropy={0.5}
-            color={color}
-            attenuationColor={color}
-            attenuationDistance={1}
+          <meshPhysicalMaterial
+            transmission={0.4} // Subtle translucency for enamel
+            thickness={1}
+            roughness={0.08} // Natural smooth ceramic, not a perfect mirror
+            clearcoat={1} // High-gloss outer enamel surface
+            clearcoatRoughness={0.05}
+            metalness={0}
+            ior={1.62} // Average IOR for human enamel
+            reflectivity={0.5}
+            color="#fbfcfd" // Off-white dental ceramic
+            attenuationColor={color} // Brand color tint in the depth
+            attenuationDistance={0.5}
           />
         </mesh>
       </Center>
