@@ -30,7 +30,7 @@ export const Dashboard: React.FC = () => {
         </div>
         
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden group transition-all hover:shadow-md bg-gradient-to-br from-white to-slate-50">
-          <div className="absolute top-1/2 right-0 w-40 h-40 -translate-y-1/2 translate-x-1/4 opacity-30 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none">
+          <div className="absolute top-1/2 right-0 w-40 h-40 -translate-y-1/2 -ml-8 opacity-30 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none">
             <PulsingSignature color="#3b82f6" speed={1.5} distort={0.1} scale={0.6} />
           </div>
           <div className="relative z-10">
