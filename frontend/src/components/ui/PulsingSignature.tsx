@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Environment, Center, RoundedBox, MeshTransmissionMaterial } from '@react-three/drei';
+import { Float, Environment, Center, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface PulsingSignatureProps {
@@ -48,17 +48,17 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
     bevelEnabled: true, 
     bevelThickness: 0.3, 
     bevelSize: 0.3, 
-    bevelSegments: 64, // Doubled for ultra-smoothness
-    curveSegments: 64, // Doubled for ultra-smoothness
+    bevelSegments: 32, // Optimized for performance balance
+    curveSegments: 32, // Optimized for performance balance
   }), []);
 
-  // Effect to center the geometry once it's created
-  const geometryRef = useRef<THREE.ExtrudeGeometry>(null);
-  useMemo(() => {
-    if (geometryRef.current) {
-      geometryRef.current.center();
-    }
-  }, [toothShape]);
+  // Pre-calculate and center geometry once to save massive resources
+  const toothGeometry = useMemo(() => {
+    const geo = new THREE.ExtrudeGeometry(toothShape, extrudeSettings);
+    geo.computeVertexNormals();
+    geo.center();
+    return geo;
+  }, [toothShape, extrudeSettings]);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -83,35 +83,33 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
         {showGlassPlate && (
           <RoundedBox
             ref={plateRef}
-            args={[3.5, 3.5, 0.05]} // Large plate
-            radius={0.2} // Rounded corners
+            args={[3.5, 3.5, 0.05]} 
+            radius={0.2} 
             smoothness={4}
-            position={[0, 0, -0.6]} // Sit behind the tooth
+            position={[0, 0, -0.6]} 
           >
-            <MeshTransmissionMaterial
+            <meshPhysicalMaterial
               transmission={1}
-              thickness={0.05} // Very thin, clear glass
-              roughness={0.02} // Super pristine surface
-              ior={1.1} // Subtle refraction
-              chromaticAberration={0.15} // Premium optical dispersal
-              anisotropy={0.2}
+              thickness={0.05} 
+              roughness={0.02} 
+              ior={1.1} 
+              reflectivity={0.5}
               color="#ffffff"
             />
           </RoundedBox>
         )}
-        <mesh ref={meshRef}>
-          <extrudeGeometry ref={geometryRef} onUpdate={(self) => self.center()} args={[toothShape, extrudeSettings]} />
+        <mesh ref={meshRef} geometry={toothGeometry}>
           <meshPhysicalMaterial
-            transmission={0.5} // Balanced for a solid, yet premium enamel look
+            transmission={0.5} 
             thickness={1.5}
-            roughness={0.15} // Satin finish, less oily/shiny
-            clearcoat={0.4} // Subtle surface gloss
+            roughness={0.15} 
+            clearcoat={0.4} 
             clearcoatRoughness={0.1}
             metalness={0}
-            ior={1.45} // More realistic for porcelain/enamel
-            reflectivity={0.3} // Reduced for a more natural response
-            color="#ffffff" // Purer white dental shade
-            attenuationColor={color} // Subtle brand-blue core
+            ior={1.45} 
+            reflectivity={0.3} 
+            color="#ffffff" 
+            attenuationColor={color} 
             attenuationDistance={1.2}
           />
         </mesh>
@@ -123,13 +121,19 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
 export const PulsingSignature: React.FC<PulsingSignatureProps> = (props) => {
   return (
     <Canvas
-      dpr={[1, 2]} // High-DPI support to remove pixelation
+      dpr={[1, 1.5]} // Optimized DPI to save GPU fill-rate
+      gl={{ 
+        powerPreference: "high-performance",
+        alpha: true,
+        antialias: true,
+        stencil: false,
+        depth: true
+      }}
       camera={{ position: [0, 0, 3.2], fov: 35 }}
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
     >
       <ambientLight intensity={1.5} />
-      <directionalLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
-      <directionalLight position={[-10, -10, -10]} intensity={1} color="#ffffff" />
+      <pointLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
       <Environment preset="city" />
       <PremiumCrystalTooth {...props} />
     </Canvas>
