@@ -1,20 +1,23 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Environment, Center } from '@react-three/drei';
+import { Float, Environment, Center, RoundedBox, MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface PulsingSignatureProps {
   color?: string;
   speed?: number;
   scale?: number;
+  showGlassPlate?: boolean;
 }
 
 const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({ 
   color = '#2563eb', // Default evismart-blue
   speed = 1.0,
-  scale = 1
+  scale = 1,
+  showGlassPlate = false
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const plateRef = useRef<THREE.Mesh>(null);
 
   // Procedurally generate a stylized molar tooth profile
   const toothShape = useMemo(() => {
@@ -50,8 +53,8 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
   }), []);
 
   useFrame((state) => {
+    const t = state.clock.getElapsedTime();
     if (meshRef.current) {
-      const t = state.clock.getElapsedTime();
       // Elegant, flawless rotation
       meshRef.current.rotation.y = t * 0.4 * speed;
       meshRef.current.rotation.x = Math.sin(t * 0.2) * 0.2;
@@ -60,11 +63,34 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
       const pulseScale = scale * (0.8 + Math.sin(t * speed) * 0.02);
       meshRef.current.scale.set(pulseScale, pulseScale, pulseScale);
     }
+    if (plateRef.current) {
+      plateRef.current.rotation.z = Math.sin(t / 2) * 0.05;
+      plateRef.current.rotation.x = Math.cos(t / 2) * 0.1;
+    }
   });
 
   return (
     <Float speed={2} rotationIntensity={0.2} floatIntensity={1}>
       <Center>
+        {showGlassPlate && (
+          <RoundedBox
+            ref={plateRef}
+            args={[3.5, 3.5, 0.05]} // Large plate
+            radius={0.2} // Rounded corners
+            smoothness={4}
+            position={[0, 0, -0.8]} // Sit behind the tooth
+          >
+            <MeshTransmissionMaterial
+              transmission={1}
+              thickness={0.5}
+              roughness={0.1}
+              ior={1.2}
+              chromaticAberration={0.05}
+              anisotropy={0.1}
+              color="#ffffff"
+            />
+          </RoundedBox>
+        )}
         <mesh ref={meshRef}>
           <extrudeGeometry args={[toothShape, extrudeSettings]} />
           <meshPhysicalMaterial
