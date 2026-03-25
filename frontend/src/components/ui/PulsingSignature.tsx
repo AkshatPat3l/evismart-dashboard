@@ -82,11 +82,11 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
           >
             <MeshTransmissionMaterial
               transmission={1}
-              thickness={0.5}
-              roughness={0.1}
-              ior={1.2}
-              chromaticAberration={0.05}
-              anisotropy={0.1}
+              thickness={0.05} // Very thin, clear glass
+              roughness={0.02} // Super pristine surface
+              ior={1.1} // Subtle refraction
+              chromaticAberration={0.15} // Premium optical dispersal
+              anisotropy={0.2}
               color="#ffffff"
             />
           </RoundedBox>
