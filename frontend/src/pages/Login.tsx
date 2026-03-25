@@ -108,7 +108,7 @@ export const Login: React.FC = () => {
       </div>
 
       {/* Right Pane - 3D Animation */}
-      <div className="hidden lg:block relative w-0 flex-1 bg-gradient-to-br from-[#0f172a] to-[#1e293b] overflow-hidden">
+      <div className="hidden lg:block relative w-0 flex-1 bg-gradient-to-br from-[#020617] to-[#0f172a] overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[800px] h-[800px] opacity-80">

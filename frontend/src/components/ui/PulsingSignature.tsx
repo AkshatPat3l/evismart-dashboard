@@ -132,8 +132,8 @@ export const PulsingSignature: React.FC<PulsingSignatureProps> = (props) => {
       camera={{ position: [0, 0, 3.2], fov: 35 }}
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
     >
-      <ambientLight intensity={1.5} />
-      <pointLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
+      <ambientLight intensity={0.8} />
+      <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
       <Environment preset="city" />
       <PremiumCrystalTooth {...props} />
     </Canvas>
