@@ -52,6 +52,14 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
     curveSegments: 64, // Doubled for ultra-smoothness
   }), []);
 
+  // Effect to center the geometry once it's created
+  const geometryRef = useRef<THREE.ExtrudeGeometry>(null);
+  useMemo(() => {
+    if (geometryRef.current) {
+      geometryRef.current.center();
+    }
+  }, [toothShape]);
+
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (meshRef.current) {
@@ -78,7 +86,7 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
             args={[3.5, 3.5, 0.05]} // Large plate
             radius={0.2} // Rounded corners
             smoothness={4}
-            position={[0, 0, -0.8]} // Sit behind the tooth
+            position={[0, 0, -0.6]} // Sit behind the tooth
           >
             <MeshTransmissionMaterial
               transmission={1}
@@ -92,7 +100,7 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
           </RoundedBox>
         )}
         <mesh ref={meshRef}>
-          <extrudeGeometry args={[toothShape, extrudeSettings]} />
+          <extrudeGeometry ref={geometryRef} onUpdate={(self) => self.center()} args={[toothShape, extrudeSettings]} />
           <meshPhysicalMaterial
             transmission={0.75} // Much higher transparency for a glassy vibe
             thickness={1.2}
