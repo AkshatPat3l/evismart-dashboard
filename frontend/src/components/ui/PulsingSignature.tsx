@@ -47,8 +47,8 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
     bevelEnabled: true, 
     bevelThickness: 0.3, 
     bevelSize: 0.3, 
-    bevelSegments: 32,
-    curveSegments: 32,
+    bevelSegments: 64, // Doubled for ultra-smoothness
+    curveSegments: 64, // Doubled for ultra-smoothness
   }), []);
 
   useFrame((state) => {
@@ -71,11 +71,11 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
           <extrudeGeometry args={[toothShape, extrudeSettings]} />
           <MeshTransmissionMaterial
             backside
-            samples={16}
+            samples={32} // Increased for premium quality
             thickness={2 + distort * 5}
-            roughness={0.05}
+            roughness={0} // Maximum gloss
             clearcoat={1}
-            clearcoatRoughness={0.1}
+            clearcoatRoughness={0} // Flawless surface
             transmission={1}
             ior={1.6}
             chromaticAberration={0.03 + distort * 0.1}
@@ -93,6 +93,7 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
 export const PulsingSignature: React.FC<PulsingSignatureProps> = (props) => {
   return (
     <Canvas
+      dpr={[1, 2]} // High-DPI support to remove pixelation
       camera={{ position: [0, 0, 3.2], fov: 35 }}
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
     >
