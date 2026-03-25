@@ -102,17 +102,17 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
         <mesh ref={meshRef}>
           <extrudeGeometry ref={geometryRef} onUpdate={(self) => self.center()} args={[toothShape, extrudeSettings]} />
           <meshPhysicalMaterial
-            transmission={0.75} // Much higher transparency for a glassy vibe
-            thickness={1.2}
-            roughness={0.06} // Keep it very glossy but natural
-            clearcoat={1}
-            clearcoatRoughness={0.02}
+            transmission={0.5} // Balanced for a solid, yet premium enamel look
+            thickness={1.5}
+            roughness={0.15} // Satin finish, less oily/shiny
+            clearcoat={0.4} // Subtle surface gloss
+            clearcoatRoughness={0.1}
             metalness={0}
-            ior={1.55} // Glass/Ceramic refractive index
-            reflectivity={0.6}
-            color="#f4f7f9" // Slightly cooler off-white
-            attenuationColor={color} // Brand blue tint 
-            attenuationDistance={1}
+            ior={1.45} // More realistic for porcelain/enamel
+            reflectivity={0.3} // Reduced for a more natural response
+            color="#ffffff" // Purer white dental shade
+            attenuationColor={color} // Subtle brand-blue core
+            attenuationDistance={1.2}
           />
         </mesh>
       </Center>
