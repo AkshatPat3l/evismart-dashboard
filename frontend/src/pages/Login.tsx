@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { gqlClient, LOGIN_MUTATION } from '../lib/api';
 import { Lock, Mail } from 'lucide-react';
 
+import { PulsingSignature } from '../components/ui/PulsingSignature';
+
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,68 +35,88 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="mx-auto w-12 h-12 bg-evismart-blue rounded-xl flex items-center justify-center mb-4">
-          <span className="text-white text-2xl font-bold">E</span>
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Left Pane - Form */}
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:w-1/2 lg:px-20 xl:px-24">
+        <div className="mx-auto w-full max-w-sm lg:w-96 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl shadow-lg shadow-blue-500/30 flex items-center justify-center mb-8">
+            <span className="text-white text-3xl font-bold tracking-tighter">E</span>
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+            Welcome to EviSmart
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Sign in to access your lab portal and manage cases.
+          </p>
+
+          <div className="mt-8">
+            <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100">
+              {error && (
+                <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-r-md p-4">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">{error}</h3>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <form className="space-y-6" onSubmit={handleLogin}>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+                  <div className="relative rounded-xl shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input
+                      type="email" required
+                      value={email} onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full pl-11 sm:text-sm border-slate-200 rounded-xl py-3 border outline-none bg-slate-50 focus:bg-white focus:ring-2 focus:ring-evismart-blue focus:border-transparent transition-all"
+                      placeholder="tester@evismart.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+                  <div className="relative rounded-xl shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input
+                      type="password" required
+                      value={password} onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full pl-11 sm:text-sm border-slate-200 rounded-xl py-3 border outline-none bg-slate-50 focus:bg-white focus:ring-2 focus:ring-evismart-blue focus:border-transparent transition-all"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit" disabled={isLoading}
+                  className={`w-full flex justify-center py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 text-sm font-bold text-white bg-evismart-blue hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-evismart-blue transition-all ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  {isLoading ? 'Authenticating...' : 'Sign in safely'}
+                </button>
+              </form>
+            </div>
+          </div>
+          <p className="mt-8 text-center text-xs text-slate-400">
+            Hint: <span className="font-medium text-slate-500">tester@evismart.com / password123</span>
+          </p>
         </div>
-        <h2 className="text-center text-3xl font-bold tracking-tight text-slate-900">
-          Sign in to EviSmart
-        </h2>
-        <p className="mt-2 text-center text-sm text-slate-600">
-          Reviewer Hint: <span className="font-semibold text-evismart-blue">tester@evismart.com</span> / <span className="font-semibold text-evismart-blue">password123</span>
-        </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-sm sm:rounded-lg sm:px-10 border border-slate-200">
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">{error}</h3>
-                </div>
-              </div>
-            </div>
-          )}
-          <form className="space-y-6" onSubmit={handleLogin}>
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Email address</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="email" required
-                  value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md py-2 border outline-none focus:ring-2 focus:ring-evismart-blue focus:border-evismart-blue px-3 transition-shadow"
-                  placeholder="tester@evismart.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Password</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="password" required
-                  value={password} onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md py-2 border outline-none focus:ring-2 focus:ring-evismart-blue focus:border-evismart-blue px-3 transition-shadow"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit" disabled={isLoading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-evismart-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-evismart-blue transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </button>
-          </form>
+      {/* Right Pane - 3D Animation */}
+      <div className="hidden lg:block relative w-0 flex-1 bg-gradient-to-br from-[#0f172a] to-[#1e293b] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[800px] h-[800px] opacity-80">
+            <PulsingSignature color="#3b82f6" speed={1.2} distort={0.1} scale={1.1} />
+          </div>
+        </div>
+        <div className="absolute bottom-12 left-12 right-12 text-center pointer-events-none text-white/40 font-medium tracking-widest text-sm uppercase">
+          Intelligent Dental Operating Web System
         </div>
       </div>
     </div>

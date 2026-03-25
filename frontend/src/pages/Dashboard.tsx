@@ -1,4 +1,5 @@
 import React from 'react';
+import { PulsingSignature } from '../components/ui/PulsingSignature';
 
 export const Dashboard: React.FC = () => {
   return (
@@ -10,7 +11,7 @@ export const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Placeholder Stats */}
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
           <h3 className="text-sm font-medium text-slate-500">Active Cases</h3>
           <p className="text-3xl font-bold mt-2">142</p>
           <div className="mt-2 text-sm text-green-600 flex items-center gap-1">
@@ -19,7 +20,7 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
           <h3 className="text-sm font-medium text-slate-500">Scans Processing</h3>
           <p className="text-3xl font-bold mt-2">8</p>
           <div className="mt-2 text-sm text-slate-500 flex items-center gap-1">
@@ -28,11 +29,18 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-evismart-blue/5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-          <h3 className="text-sm font-medium text-slate-500">Platform Health</h3>
-          <p className="text-3xl font-bold mt-2 text-evismart-blue">99.9%</p>
-          <div className="mt-2 text-sm text-slate-500">All systems operational</div>
+        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden group transition-all hover:shadow-md bg-gradient-to-br from-white to-slate-50">
+          <div className="absolute top-1/2 right-0 w-40 h-40 -translate-y-1/2 translate-x-1/4 opacity-30 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none">
+            <PulsingSignature color="#3b82f6" speed={1.5} distort={0.1} scale={0.6} />
+          </div>
+          <div className="relative z-10">
+            <h3 className="text-sm font-medium text-slate-500">Platform Health</h3>
+            <p className="text-3xl font-bold mt-2 text-evismart-blue">99.9%</p>
+            <div className="mt-2 text-sm text-slate-500 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              All systems operational
+            </div>
+          </div>
         </div>
       </div>
 

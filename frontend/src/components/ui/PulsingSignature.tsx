@@ -6,12 +6,14 @@ import * as THREE from 'three';
 interface PulsingSignatureProps {
   color?: string;
   speed?: number;
+  distort?: number;
   scale?: number;
 }
 
 const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({ 
   color = '#2563eb', // Default evismart-blue
   speed = 1.0,
+  distort = 0.1,
   scale = 1
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -70,13 +72,13 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
           <MeshTransmissionMaterial
             backside
             samples={16}
-            thickness={2.5}
+            thickness={2 + distort * 5}
             roughness={0.05}
             clearcoat={1}
             clearcoatRoughness={0.1}
             transmission={1}
             ior={1.6}
-            chromaticAberration={0.05}
+            chromaticAberration={0.03 + distort * 0.1}
             anisotropy={0.5}
             color={color}
             attenuationColor={color}
@@ -91,8 +93,8 @@ const PremiumCrystalTooth: React.FC<PulsingSignatureProps> = ({
 export const PulsingSignature: React.FC<PulsingSignatureProps> = (props) => {
   return (
     <Canvas
-      camera={{ position: [0, 0, 4.5], fov: 45 }}
-      style={{ width: '100%', height: '100%' }}
+      camera={{ position: [0, 0, 3.2], fov: 35 }}
+      style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
     >
       <ambientLight intensity={1.5} />
       <directionalLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
